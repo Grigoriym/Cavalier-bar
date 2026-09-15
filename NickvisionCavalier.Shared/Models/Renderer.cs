@@ -145,7 +145,7 @@ public class Renderer
                 var bgRect = new SKRect(0, 0, _bgImageBitmap.Width * bgScale, _bgImageBitmap.Height * bgScale);
                 _bgTargetBitmap?.Dispose();
                 _bgTargetBitmap = new SKBitmap((int)(bgRect.Width * Configuration.Current.BgImageScale), (int)(bgRect.Height * Configuration.Current.BgImageScale));
-                _bgImageBitmap.ScalePixels(_bgTargetBitmap, SKFilterQuality.Medium);
+                _bgImageBitmap.ScalePixels(_bgTargetBitmap, new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
             }
         }
         if (_oldWidth != width || _oldHeight != height || Math.Abs(_oldFgScale - Configuration.Current.FgImageScale) > 0.01f)
@@ -157,7 +157,7 @@ public class Renderer
                 var fgRect = new SKRect(0, 0, _fgImageBitmap.Width * fgScale, _fgImageBitmap.Height * fgScale);
                 _fgTargetBitmap?.Dispose();
                 _fgTargetBitmap = new SKBitmap((int)(fgRect.Width * Configuration.Current.FgImageScale), (int)(fgRect.Height * Configuration.Current.FgImageScale));
-                _fgImageBitmap.ScalePixels(_fgTargetBitmap, SKFilterQuality.Medium);
+                _fgImageBitmap.ScalePixels(_fgTargetBitmap, new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
             }
         }
         _oldWidth = width;
