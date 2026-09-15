@@ -12,7 +12,9 @@ namespace NickvisionCavalier.GNOME.Views;
 /// <summary>
 /// The DrawingView to render CAVA's output
 /// </summary>
-public partial class DrawingView : Gtk.Stack, IDisposable
+[GObject.Subclass<Gtk.Stack>(qualifiedName: nameof(DrawingView))]
+[Gtk.Template<TranslatedTemplateLoader>("drawing_view.ui")]
+public partial class DrawingView : IDisposable
 {
     public delegate bool GSourceFunc(nint data);
 
@@ -21,16 +23,16 @@ public partial class DrawingView : Gtk.Stack, IDisposable
     [LibraryImport("libGL.so.1", StringMarshalling = StringMarshalling.Utf8)]
     private static partial void glClear(uint mask);
 
-    [Gtk.Connect] private readonly Adw.StatusPage _welcomeStatus;
-    [Gtk.Connect] private readonly Gtk.GLArea _glArea;
-    [Gtk.Connect] private readonly Gtk.DrawingArea _cairoArea;
+    [Gtk.Connect] private Adw.StatusPage _welcomeStatus;
+    [Gtk.Connect] private Gtk.GLArea _glArea;
+    [Gtk.Connect] private Gtk.DrawingArea _cairoArea;
 
     private bool _disposed;
-    private readonly DrawingViewController _controller;
-    private readonly bool _useCairo;
+    private DrawingViewController _controller;
+    private bool _useCairo;
     private readonly GSourceFunc _showGl;
     private readonly GSourceFunc _queueRender;
-    private readonly Timer _renderTimer;
+    private Timer _renderTimer;
     private bool _showWelcome;
     private GRContext? _ctx;
     private SKImageInfo? _imgInfo;
@@ -39,13 +41,12 @@ public partial class DrawingView : Gtk.Stack, IDisposable
     private SKSurface? _skSurface;
     private float[]? _sample;
 
-    private DrawingView(Gtk.Builder builder, Gtk.Window parent, DrawingViewController controller) : base(builder.GetPointer("_root"), false)
+    private void Setup(Gtk.Window parent, DrawingViewController controller)
     {
         _disposed = false;
         _controller = controller;
         _showWelcome = true;
         //Build UI
-        builder.Connect(this);
         parent.OnNotify += (sender, e) =>
         {
             if ((e.Pspec.GetName() == "default-width" || e.Pspec.GetName() == "default-height") && _showWelcome)
@@ -117,10 +118,13 @@ public partial class DrawingView : Gtk.Stack, IDisposable
     /// <summary>
     /// Constructs a DrawingView
     /// </summary>
-    /// <param name="window">Parent window</param>
+    /// <param name="parent">Parent window</param>
     /// <param name="controller">The DrawingViewController</param>
-    public DrawingView(Gtk.Window parent, DrawingViewController controller) : this(Builder.FromFile("drawing_view.ui"), parent, controller)
+    public static DrawingView Create(Gtk.Window parent, DrawingViewController controller)
     {
+        var view = NewWithProperties([]);
+        view.Setup(parent, controller);
+        return view;
     }
 
     /// <summary>

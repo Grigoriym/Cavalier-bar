@@ -102,7 +102,7 @@ public partial class Program
         }
         else
         {
-            _mainWindow = new MainWindow(_mainWindowController, _application);
+            _mainWindow = MainWindow.Create(_mainWindowController, _application);
             _mainWindow.Start();
         }
     }

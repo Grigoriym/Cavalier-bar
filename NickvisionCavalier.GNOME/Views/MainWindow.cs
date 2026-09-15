@@ -15,26 +15,27 @@ namespace NickvisionCavalier.GNOME.Views;
 /// <summary>
 /// The MainWindow for the application
 /// </summary>
-public class MainWindow : Adw.ApplicationWindow
+[GObject.Subclass<Adw.ApplicationWindow>(qualifiedName: nameof(MainWindow))]
+[Gtk.Template<TranslatedTemplateLoader>("window.ui")]
+public partial class MainWindow
 {
-    [Gtk.Connect] private readonly Gtk.Overlay _overlay;
-    [Gtk.Connect] private readonly Gtk.Revealer _headerRevealer;
-    [Gtk.Connect] private readonly Adw.HeaderBar _header;
-    [Gtk.Connect] private readonly Adw.Bin _resizeBin;
+    [Gtk.Connect] private Gtk.Overlay _overlay;
+    [Gtk.Connect] private Gtk.Revealer _headerRevealer;
+    [Gtk.Connect] private Adw.HeaderBar _header;
+    [Gtk.Connect] private Adw.Bin _resizeBin;
 
-    private readonly MainWindowController _controller;
-    private readonly Adw.Application _application;
-    private readonly DrawingView _drawingView;
-    private readonly PreferencesViewController _preferencesController;
-    private readonly Timer _resizeTimer;
+    private MainWindowController _controller;
+    private Adw.Application _application;
+    private DrawingView _drawingView;
+    private PreferencesViewController _preferencesController;
+    private Timer _resizeTimer;
 
-    private MainWindow(Gtk.Builder builder, MainWindowController controller, Adw.Application application) : base(builder.GetPointer("_root"), false)
+    private void Setup(MainWindowController controller, Adw.Application application)
     {
         //Window Settings
         _controller = controller;
         _application = application;
         //Build UI
-        builder.Connect(this);
         _controller.RaiseCommandReceived += (sender, e) => Present();
         SetDefaultSize((int)_controller.WindowWidth, (int)_controller.WindowHeight);
         if (_controller.WindowMaximized)
@@ -43,7 +44,7 @@ public class MainWindow : Adw.ApplicationWindow
         }
         SetTitle(_controller.AppInfo.ShortName);
         SetIconName(_controller.AppInfo.ID);
-        _drawingView = new DrawingView(this, new DrawingViewController());
+        _drawingView = DrawingView.Create(this, new DrawingViewController());
         _overlay.SetChild(_drawingView);
         _preferencesController = _controller.PreferencesViewController;
         _preferencesController.OnWindowSettingsChanged += UpdateWindowSettings;
@@ -53,11 +54,11 @@ public class MainWindow : Adw.ApplicationWindow
             GLib.Functions.IdleAdd(0, () =>
             {
                 Present();
-                new CommandHelpDialog(this, _controller.AppInfo.ID, help).Present();
+                CommandHelpDialog.Create(this, _controller.AppInfo.ID, help).Present();
                 return false;
             });
         };
-        var preferencesDialog = new PreferencesDialog(_preferencesController, application);
+        var preferencesDialog = PreferencesDialog.Create(_preferencesController, application);
         OnCloseRequest += OnClose;
         UpdateWindowSettings(this, EventArgs.Empty);
         OnNotify += (sender, e) =>
@@ -125,8 +126,11 @@ public class MainWindow : Adw.ApplicationWindow
     /// </summary>
     /// <param name="controller">The MainWindowController</param>
     /// <param name="application">The Adw.Application</param>
-    public MainWindow(MainWindowController controller, Adw.Application application) : this(Builder.FromFile("window.ui"), controller, application)
+    public static MainWindow Create(MainWindowController controller, Adw.Application application)
     {
+        var window = NewWithProperties([]);
+        window.Setup(controller, application);
+        return window;
     }
 
     /// <summary>

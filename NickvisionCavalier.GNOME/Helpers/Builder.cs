@@ -5,14 +5,14 @@ using static Nickvision.Aura.Localization.Gettext;
 
 namespace NickvisionCavalier.GNOME.Helpers;
 
-public class Builder
+public static class Builder
 {
     /// <summary>
-    /// Creates a Gtk.Builder from an embedded resource and replaces all translatable strings with the localized version
+    /// Reads an embedded .ui resource and replaces all translatable strings with the localized version
     /// </summary>
     /// <param name="name">The name of the embedded resource</param>
-    /// <returns>Gtk.Builder</returns>
-    public static Gtk.Builder FromFile(string name)
+    /// <returns>The translated UI XML as a string</returns>
+    public static string ReadTranslatedXml(string name)
     {
         using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
         using var reader = new StreamReader(stream!);
@@ -36,6 +36,13 @@ public class Builder
                 }
             }
         }
-        return Gtk.Builder.NewFromString(xml.OuterXml, -1);
+        return xml.OuterXml;
     }
+
+    /// <summary>
+    /// Creates a Gtk.Builder from an embedded resource and replaces all translatable strings with the localized version
+    /// </summary>
+    /// <param name="name">The name of the embedded resource</param>
+    /// <returns>Gtk.Builder</returns>
+    public static Gtk.Builder FromFile(string name) => Gtk.Builder.NewFromString(ReadTranslatedXml(name), -1);
 }

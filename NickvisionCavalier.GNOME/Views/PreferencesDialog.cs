@@ -13,76 +13,78 @@ namespace NickvisionCavalier.GNOME.Views;
 /// <summary>
 /// The PreferencesDialog for the application
 /// </summary>
-public class PreferencesDialog : Adw.PreferencesWindow
+[GObject.Subclass<Adw.PreferencesWindow>(qualifiedName: nameof(PreferencesDialog))]
+[Gtk.Template<TranslatedTemplateLoader>("preferences_dialog.ui")]
+public partial class PreferencesDialog
 {
     private bool _avoidCAVAReload;
     private bool _removingImages;
-    private readonly Gtk.ColorDialog _colorDialog;
-    private readonly PreferencesViewController _controller;
-    private readonly uint[] _framerates;
+    private Gtk.ColorDialog _colorDialog;
+    private PreferencesViewController _controller;
+    private uint[] _framerates;
 
-    [Gtk.Connect] private readonly Gtk.ToggleButton _boxButton;
-    [Gtk.Connect] private readonly Gtk.CheckButton _waveCheckButton;
-    [Gtk.Connect] private readonly Gtk.CheckButton _levelsCheckButton;
-    [Gtk.Connect] private readonly Gtk.CheckButton _particlesCheckButton;
-    [Gtk.Connect] private readonly Gtk.CheckButton _barsCheckButton;
-    [Gtk.Connect] private readonly Adw.ActionRow _spineRow;
-    [Gtk.Connect] private readonly Gtk.CheckButton _spineCheckButton;
-    [Gtk.Connect] private readonly Gtk.CheckButton _splitterCheckButton;
-    [Gtk.Connect] private readonly Gtk.Scale _radiusScale;
-    [Gtk.Connect] private readonly Gtk.Scale _rotationScale;
-    [Gtk.Connect] private readonly Adw.ComboRow _mirrorRow;
-    [Gtk.Connect] private readonly Adw.SwitchRow _reverseMirrorRow;
-    [Gtk.Connect] private readonly Gtk.Scale _marginScale;
-    [Gtk.Connect] private readonly Gtk.Scale _areaOffsetXScale;
-    [Gtk.Connect] private readonly Gtk.Scale _areaOffsetYScale;
-    [Gtk.Connect] private readonly Adw.ComboRow _directionRow;
-    [Gtk.Connect] private readonly Adw.ActionRow _offsetRow;
-    [Gtk.Connect] private readonly Gtk.Scale _offsetScale;
-    [Gtk.Connect] private readonly Adw.ActionRow _roundnessRow;
-    [Gtk.Connect] private readonly Gtk.Scale _roundnessScale;
-    [Gtk.Connect] private readonly Adw.SwitchRow _fillingRow;
-    [Gtk.Connect] private readonly Adw.ActionRow _thicknessRow;
-    [Gtk.Connect] private readonly Gtk.Scale _thicknessScale;
-    [Gtk.Connect] private readonly Adw.SwitchRow _borderlessRow;
-    [Gtk.Connect] private readonly Adw.SwitchRow _sharpCornersRow;
-    [Gtk.Connect] private readonly Adw.SwitchRow _windowControlsRow;
-    [Gtk.Connect] private readonly Adw.SwitchRow _autohideHeaderRow;
-    [Gtk.Connect] private readonly Adw.ComboRow _framerateRow;
-    [Gtk.Connect] private readonly Adw.EntryRow _customFramerateRow;
-    [Gtk.Connect] private readonly Gtk.Scale _barsScale;
-    [Gtk.Connect] private readonly Adw.SwitchRow _autosensRow;
-    [Gtk.Connect] private readonly Gtk.Scale _sensitivityScale;
-    [Gtk.Connect] private readonly Gtk.ToggleButton _stereoButton;
-    [Gtk.Connect] private readonly Adw.SwitchRow _monstercatRow;
-    [Gtk.Connect] private readonly Gtk.Scale _noiseReductionScale;
-    [Gtk.Connect] private readonly Adw.SwitchRow _reverseRow;
-    [Gtk.Connect] private readonly Adw.ComboRow _inputMethodRow;
-    [Gtk.Connect] private readonly Adw.EntryRow _inputSourceRow;
-    [Gtk.Connect] private readonly Adw.SwitchRow _wavesRow;
-    [Gtk.Connect] private readonly Gtk.Scale _gravityScale;
-    [Gtk.Connect] private readonly Gtk.Scale _eqBand1Scale;
-    [Gtk.Connect] private readonly Gtk.Scale _eqBand2Scale;
-    [Gtk.Connect] private readonly Gtk.Scale _eqBand3Scale;
-    [Gtk.Connect] private readonly Gtk.Scale _eqBand4Scale;
-    [Gtk.Connect] private readonly Gtk.Scale _eqBand5Scale;
-    [Gtk.Connect] private readonly Gtk.Scale _eqBand6Scale;
-    [Gtk.Connect] private readonly Gtk.Scale _eqBand7Scale;
-    [Gtk.Connect] private readonly Gtk.Scale _eqBand8Scale;
-    [Gtk.Connect] private readonly Gtk.ListBox _profilesList;
-    [Gtk.Connect] private readonly Gtk.Button _addProfileButton;
-    [Gtk.Connect] private readonly Gtk.ToggleButton _lightThemeButton;
-    [Gtk.Connect] private readonly Gtk.Grid _colorsGrid;
-    [Gtk.Connect] private readonly Gtk.Button _addFgColorButton;
-    [Gtk.Connect] private readonly Gtk.Button _addBgColorButton;
-    [Gtk.Connect] private readonly Gtk.ToggleButton _bgImgButton;
-    [Gtk.Connect] private readonly Gtk.Button _addImageButton;
-    [Gtk.Connect] private readonly Gtk.SpinButton _imgScaleSpin;
-    [Gtk.Connect] private readonly Gtk.SpinButton _imgAlphaSpin;
-    [Gtk.Connect] private readonly Gtk.Stack _imagesStack;
-    [Gtk.Connect] private readonly Gtk.FlowBox _imagesFlowBox;
+    [Gtk.Connect] private Gtk.ToggleButton _boxButton;
+    [Gtk.Connect] private Gtk.CheckButton _waveCheckButton;
+    [Gtk.Connect] private Gtk.CheckButton _levelsCheckButton;
+    [Gtk.Connect] private Gtk.CheckButton _particlesCheckButton;
+    [Gtk.Connect] private Gtk.CheckButton _barsCheckButton;
+    [Gtk.Connect] private Adw.ActionRow _spineRow;
+    [Gtk.Connect] private Gtk.CheckButton _spineCheckButton;
+    [Gtk.Connect] private Gtk.CheckButton _splitterCheckButton;
+    [Gtk.Connect] private Gtk.Scale _radiusScale;
+    [Gtk.Connect] private Gtk.Scale _rotationScale;
+    [Gtk.Connect] private Adw.ComboRow _mirrorRow;
+    [Gtk.Connect] private Adw.SwitchRow _reverseMirrorRow;
+    [Gtk.Connect] private Gtk.Scale _marginScale;
+    [Gtk.Connect] private Gtk.Scale _areaOffsetXScale;
+    [Gtk.Connect] private Gtk.Scale _areaOffsetYScale;
+    [Gtk.Connect] private Adw.ComboRow _directionRow;
+    [Gtk.Connect] private Adw.ActionRow _offsetRow;
+    [Gtk.Connect] private Gtk.Scale _offsetScale;
+    [Gtk.Connect] private Adw.ActionRow _roundnessRow;
+    [Gtk.Connect] private Gtk.Scale _roundnessScale;
+    [Gtk.Connect] private Adw.SwitchRow _fillingRow;
+    [Gtk.Connect] private Adw.ActionRow _thicknessRow;
+    [Gtk.Connect] private Gtk.Scale _thicknessScale;
+    [Gtk.Connect] private Adw.SwitchRow _borderlessRow;
+    [Gtk.Connect] private Adw.SwitchRow _sharpCornersRow;
+    [Gtk.Connect] private Adw.SwitchRow _windowControlsRow;
+    [Gtk.Connect] private Adw.SwitchRow _autohideHeaderRow;
+    [Gtk.Connect] private Adw.ComboRow _framerateRow;
+    [Gtk.Connect] private Adw.EntryRow _customFramerateRow;
+    [Gtk.Connect] private Gtk.Scale _barsScale;
+    [Gtk.Connect] private Adw.SwitchRow _autosensRow;
+    [Gtk.Connect] private Gtk.Scale _sensitivityScale;
+    [Gtk.Connect] private Gtk.ToggleButton _stereoButton;
+    [Gtk.Connect] private Adw.SwitchRow _monstercatRow;
+    [Gtk.Connect] private Gtk.Scale _noiseReductionScale;
+    [Gtk.Connect] private Adw.SwitchRow _reverseRow;
+    [Gtk.Connect] private Adw.ComboRow _inputMethodRow;
+    [Gtk.Connect] private Adw.EntryRow _inputSourceRow;
+    [Gtk.Connect] private Adw.SwitchRow _wavesRow;
+    [Gtk.Connect] private Gtk.Scale _gravityScale;
+    [Gtk.Connect] private Gtk.Scale _eqBand1Scale;
+    [Gtk.Connect] private Gtk.Scale _eqBand2Scale;
+    [Gtk.Connect] private Gtk.Scale _eqBand3Scale;
+    [Gtk.Connect] private Gtk.Scale _eqBand4Scale;
+    [Gtk.Connect] private Gtk.Scale _eqBand5Scale;
+    [Gtk.Connect] private Gtk.Scale _eqBand6Scale;
+    [Gtk.Connect] private Gtk.Scale _eqBand7Scale;
+    [Gtk.Connect] private Gtk.Scale _eqBand8Scale;
+    [Gtk.Connect] private Gtk.ListBox _profilesList;
+    [Gtk.Connect] private Gtk.Button _addProfileButton;
+    [Gtk.Connect] private Gtk.ToggleButton _lightThemeButton;
+    [Gtk.Connect] private Gtk.Grid _colorsGrid;
+    [Gtk.Connect] private Gtk.Button _addFgColorButton;
+    [Gtk.Connect] private Gtk.Button _addBgColorButton;
+    [Gtk.Connect] private Gtk.ToggleButton _bgImgButton;
+    [Gtk.Connect] private Gtk.Button _addImageButton;
+    [Gtk.Connect] private Gtk.SpinButton _imgScaleSpin;
+    [Gtk.Connect] private Gtk.SpinButton _imgAlphaSpin;
+    [Gtk.Connect] private Gtk.Stack _imagesStack;
+    [Gtk.Connect] private Gtk.FlowBox _imagesFlowBox;
 
-    private PreferencesDialog(Gtk.Builder builder, PreferencesViewController controller, Adw.Application application) : base(builder.GetPointer("_root"), false)
+    private void Setup(PreferencesViewController controller, Adw.Application application)
     {
         _avoidCAVAReload = false;
         _removingImages = false;
@@ -561,8 +563,6 @@ public class PreferencesDialog : Adw.PreferencesWindow
         };
         application.AddAction(actDecFgImgAlpha);
         application.SetAccelsForAction("app.dec-fg-img-alpha", new string[] { "asciicircum" });
-        //Build UI
-        builder.Connect(this);
         OnCloseRequest += (sender, e) =>
         {
             _controller.SaveConfiguration();
@@ -1178,8 +1178,11 @@ public class PreferencesDialog : Adw.PreferencesWindow
     /// Constructs a PreferencesDialog
     /// </summary>
     /// <param name="controller">PreferencesViewController</param>
-    public PreferencesDialog(PreferencesViewController controller, Adw.Application application) : this(Builder.FromFile("preferences_dialog.ui"), controller, application)
+    public static PreferencesDialog Create(PreferencesViewController controller, Adw.Application application)
     {
+        var dialog = NewWithProperties([]);
+        dialog.Setup(controller, application);
+        return dialog;
     }
 
     /// <summary>
