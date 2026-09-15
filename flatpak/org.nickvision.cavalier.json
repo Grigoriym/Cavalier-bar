@@ -1,15 +1,15 @@
 {
     "app-id" : "org.nickvision.cavalier",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "45",
+    "runtime-version" : "50",
     "sdk" : "org.gnome.Sdk",
     "sdk-extensions": [
-        "org.freedesktop.Sdk.Extension.dotnet8"
+        "org.freedesktop.Sdk.Extension.dotnet10"
     ],
     "build-options": {
-        "append-path": "/usr/lib/sdk/dotnet8/bin",
-        "append-ld-library-path": "/usr/lib/sdk/dotnet8/lib",
-        "append-pkg-config-path": "/usr/lib/sdk/dotnet8/lib/pkgconfig"
+        "append-path": "/usr/lib/sdk/dotnet10/bin",
+        "append-ld-library-path": "/usr/lib/sdk/dotnet10/lib",
+        "append-pkg-config-path": "/usr/lib/sdk/dotnet10/lib/pkgconfig"
     },
     "command" : "org.nickvision.cavalier",
     "finish-args":[
@@ -51,7 +51,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/karlstav/cava.git",
-                    "tag" : "0.9.1"
+                    "tag" : "1.0.0"
                 }
             ]
         },
@@ -65,7 +65,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/jwestman/blueprint-compiler",
-                    "tag": "v0.10.0"
+                    "tag": "v0.22.2"
                 }
             ]
         },

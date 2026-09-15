@@ -18,8 +18,8 @@
     <PackageReference Include="Microsoft.NETCore.Targets" Version="5.0.0" />
     <PackageReference Include="Nickvision.Aura" Version="2023.11.4" />
     <PackageReference Include="SkiaSharp" Version="2.88.6" />
-    <PackageReference Include="Tmds.DBus" Version="0.92.0" />
-    <PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
+    <PackageReference Include="Tmds.DBus" Version="0.95.1" />
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.95.1" />
   </ItemGroup>
 
   <ItemGroup>
