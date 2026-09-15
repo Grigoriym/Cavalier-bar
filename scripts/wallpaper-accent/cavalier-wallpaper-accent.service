@@ -1,0 +1,6 @@
+[Unit]
+Description=Set Cavalier bar colors from the current wallpaper
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/env python3 %h/proj/grappim/Cavalier-bar/scripts/wallpaper-accent/wallpaper_accent.py
